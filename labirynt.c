@@ -16,7 +16,7 @@ void rozmiar(FILE* filename, FILE *tym) {
     char s[2048];
     int i = 0; // Licznik wierszy
     int j = 0; // Licznik kolumn
-    while ((znak = fgetc(filename)) == 'X' && znak != EOF) {
+    while ((znak = fgetc(filename)) == 'X' && znak != EOF && znak!='\n') {
         j++;
     }
 
