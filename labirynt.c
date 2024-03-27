@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 int n;   // Liczba wierszy
 int m;   // Liczba kolumn
 
 void rozmiar(FILE* filename, FILE *tym) {
     if (!filename) {
-        printf("Nie można otworzyć pliku.\n");
+        printf("Nie mo¿na otworzyæ pliku.\n");
         exit(1);
     }
 
@@ -19,7 +20,7 @@ void rozmiar(FILE* filename, FILE *tym) {
         j++;
     }
 
-    rewind(filename); // Przewijamy do początku pliku
+    rewind(filename); // Przewijamy do pocz¹tku pliku
 
     while (fgets(s, sizeof(s), filename)) {
         fputs(s, tym);
@@ -32,7 +33,7 @@ void rozmiar(FILE* filename, FILE *tym) {
 }
 void czytaj(FILE *file) {
     if (!file) {
-        printf("Nie można otworzyć pliku.\n");
+        printf("Nie mo¿na otworzyæ pliku.\n");
         exit(1);
     }
     int c;
@@ -42,77 +43,69 @@ void czytaj(FILE *file) {
     printf("\n");
 }
 
-void oznacz(FILE *file) {
-    char s[m+1];
-    char pom[m+1];
-    int czydroga=1;
-    int i;
-    char temp_filename[] = "/tmp/tempXXXXXX"; // Szablon nazwy pliku tymczasowego w katalogu /tmp
-
-    // Tworzymy plik tymczasowy w katalogu /tmp
-    int temp_fd = mkstemp(temp_filename);
-    if (temp_fd == -1) {
-        perror("Błąd: nie można utworzyć pliku tymczasowego");
-        exit(2);
+bool oznacz(FILE *file, int w, int k) {
+    fseek(file, w * (m + 2) + k, SEEK_SET); // Przesunięcie kursora na odpowiednią pozycję w pliku
+    char c = fgetc(file); // Odczyt znaku z pozycji (w, k)
+    if (c == 'X') {
+        return false;
+    }
+    if (c == 'P') {
+        fseek(file, -1, SEEK_CUR); // Przesunięcie kursora o 1 wstecz, aby zapisać znak
+        fputc('P', file); // Zapis 'P' na pozycji (w, k)
+        return true;
+    }
+    if (c == 'K') {
+        fseek(file, -1, SEEK_CUR); // Przesunięcie kursora o 1 wstecz, aby zapisać znak
+        fputc('K', file); // Zapis 'K' na pozycji (w, k)
+        return true;
+    }
+    if (c == '1') {
+        return false;
+    }
+    fseek(file, w * (m + 2) + k, SEEK_SET); // Przesunięcie kursora o 1 wstecz, aby zapisać znak
+    fputc('1', file); // Zapis '1' na pozycji (w, k)
+    // Próba poruszenia się na pole powyżej
+    if (w > 0) {
+        if (oznacz(file, w - 1, k))
+            return true;
+        fseek(file, w * (m + 2) + k, SEEK_SET); // Przesunięcie kursora na dół
     }
 
-    FILE *temp_file = fdopen(temp_fd, "wb+"); // Tworzymy strumień pliku z deskryptora pliku
-    if (temp_file == NULL) {
-        perror("Błąd: nie można otworzyć strumienia pliku tymczasowego");
-        exit(2);
+    // Próba poruszenia się na pole poniżej
+    if (w < n - 1) {
+        if (oznacz(file, w + 1, k))
+            return true;
+        fseek(file, w * (m + 2) + k, SEEK_SET); // Przesunięcie kursora na górę
     }
 
-    for (i=0; i<n; i++){
-        fseek(file, (m+2)*i, SEEK_SET);
-        fgets(s, sizeof(s), file);
-        for (int k = 0; k < m; k++){ //k to kolumny
-            if (s[k]==' '){
-                czydroga=0;
-                if (s[k+1]==' ' || s[k+1]=='K'){
-                    czydroga=czydroga+1;
-                }
-                if (s[k-1]==' ' || s[k-1]=='1' || s[k-1]=='2' || s[k-1]=='3' || s[k-1]=='4' || s[k-1]=='P'){
-                    czydroga=czydroga+1;
-                }
-                fseek(file, (m+2)*(i-1), SEEK_SET);
-                fgets(pom,sizeof(pom),file);
-                if (pom[k]==' ' || pom[k]=='1' || pom[k]=='2' || pom[k]=='3' || pom[k]=='4'){
-                    czydroga=czydroga+1;
-                }
-                fseek(file, (m+2)*(i+1), SEEK_SET);
-                fgets(pom,sizeof(pom),file);
-                if (pom[k]==' '){
-                    czydroga=czydroga+1;
-                }
-                s[k]=czydroga + '0';
-            }
-        }
-        fputs(s,temp_file); // Zapisujemy oznaczone linie do tymczasowego pliku
-        fprintf(temp_file,"\n");
-    }
+    // Próba poruszenia się na pole po lewej
+    if (k > 0 && oznacz(file, w, k - 1))
+        return true;
+    fseek(file, w * (m + 2) + k, SEEK_SET);
 
-    // Kopiujemy zawartość tymczasowego pliku do oryginalnego
-    rewind(temp_file);
-    int c;
-    fclose(file);
-    file=fopen("lab.txt","w");
-    while ((c = fgetc(temp_file)) != EOF) {
-        fputc(c, file);
-    }
+    // Próba poruszenia się na pole po prawej
+    if (k < m - 1 && oznacz(file, w, k + 1))
+        return true;
 
-    fclose(temp_file);
+    // Jeśli żadna ścieżka nie prowadzi do wyjścia, cofamy się
+    fseek(file, w * (m + 2) + k, SEEK_SET); // Przesunięcie kursora na odpowiednią pozycję w pliku
+    fputc('X', file); // Przywrócenie oryginalnego znaku na pozycji (w, k)
+    return false;
 }
+
+
 
 int main() {
     const char* filename = "smallmaze.txt";
     FILE* file = fopen(filename, "r");
-    FILE *lab = fopen("lab.txt", "w");
+    FILE *lab = fopen("lab.txt", "w+");
     if (!lab) {
         printf("Nie można utworzyć pliku\n");
         return 3;
     }
 
     rozmiar(file, lab);
+    oznacz(lab, 1, 1); // Rozpoczęcie rekurencyjnej eksploracji labiryntu
     fclose(lab);
     lab = fopen("lab.txt", "r");
     if (!lab) {
@@ -122,18 +115,8 @@ int main() {
     printf("Labirynt: \n");
     czytaj(lab);
     fclose(lab);
-    lab = fopen("lab.txt","r+");
-    if (!lab){
-        printf("Nie można otworzyć pliku");
-        return 5;
-    }
-    oznacz(lab);
-    fclose(lab);
-    lab = fopen("lab.txt","r");
-    printf("Oznaczony labirynt: \n");
-    czytaj(lab);
-    fclose(lab);
     fclose(file);
     return 0;
 }
+
 
