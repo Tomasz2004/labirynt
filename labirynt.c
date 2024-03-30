@@ -5,7 +5,10 @@
 
 int n;   // Liczba wierszy
 int m;   // Liczba kolumn
-
+int pw;  // Numer wiersza P
+int pk;  // Numer kolumny P
+int kw;  // Numer wiersza K
+int kk;  // Numer kolumny K
 void rozmiar(FILE* filename, FILE *tym) {
     if (!filename) {
         printf("Nie mo¿na otworzyæ pliku.\n");
@@ -89,15 +92,206 @@ bool oznacz(FILE *file, int w, int k) {
 
     // Jeśli żadna ścieżka nie prowadzi do wyjścia, cofamy się
     fseek(file, w * (m + 2) + k, SEEK_SET); // Przesunięcie kursora na odpowiednią pozycję w pliku
-    fputc('X', file); // Przywrócenie oryginalnego znaku na pozycji (w, k)
+    fputc(' ', file); // Przywrócenie oryginalnego znaku na pozycji (w, k)
     return false;
 }
 
 
+void ZnajdzP(FILE *file){
+    int w=0;
+    char s[2048];
+    while (fgets(s, sizeof(s), file)) {
+        for (int k=0; k<m; k++){
+           if (s[k]=='P'){
+                pw=w;
+                pk=k;
+                return;
+           }
+        }
+        w++;
+    }
+}
 
-int main() {
-    const char* filename = "smallmaze.txt";
+void ZnajdzK(FILE *file){
+    int w=0;
+    char s[2048];
+    while (fgets(s, sizeof(s), file)) {
+        for (int k=0; k<m; k++){
+           if (s[k]=='K'){
+                kw=w;
+                kk=k;
+                return;
+           }
+        }
+        w++;
+    }
+}
+
+void PoprawneOznaczenie(FILE *file, int w, int k){
+    fseek(file, w*(m+2)+k,SEEK_SET);
+    char c=fgetc(file);
+    int p, g, d, l;
+    while (c!='P'){
+        p=0;
+        g=0;
+        d=0;
+        l=0;
+
+        //w prawo
+        fseek(file, w*(m+2)+k+1, SEEK_SET);
+        c=fgetc(file);
+        if (c=='1'){
+            fseek(file, -1, SEEK_CUR);
+            fputc('l',file);
+            p=1;
+        }
+
+        //w dół
+        fseek(file, (w+1)*(m+2)+k,SEEK_SET);
+        c=fgetc(file);
+        if (c=='1'){
+            fseek(file, -1,SEEK_CUR);
+            fputc('g',file);
+            g=1;
+        }
+
+        //w górę
+        fseek(file, (w-1)*(m+2)+k,SEEK_SET);
+        c=fgetc(file);
+        if (c=='1'){
+            fseek(file, -1,SEEK_CUR);
+            fputc('d',file);
+            d=1;
+
+        }
+
+        //w lewo
+        fseek(file, w*(m+2)+k-1, SEEK_SET);
+        c=fgetc(file);
+        if (c=='1'){
+            fseek(file, -1, SEEK_CUR);
+            fputc('p',file);
+            l=1;
+        }
+        if (p==1){
+            k=k+1;
+        }
+        if (g==1){
+            w=w+1;
+        }
+        if (d==1){
+            w=w-1;
+        }
+        if (l==1){
+            k=k-1;
+        }
+    }
+}
+
+
+void Instrukcja(FILE *file, int w, int k){
+    char c;
+    int kroki=1;
+    int p = 1;
+    int l = 0;
+    int g = 0;
+    int d = 0;
+    while (c!='K'){
+        fseek(file, w*(m+2)+k,SEEK_SET);
+        c=fgetc(file);
+        switch(c){
+            case 'p':
+                if (p==1){
+                    kroki+=1;
+                } else{
+                    if (g==1){
+                        printf("FORWARD %d\n", kroki);
+                        printf("TURNRIGHT\n");
+                        g=0;
+                        p=1;
+                        kroki=1;
+                    } else {
+                        printf("FORWARD %d\n", kroki);
+                        printf("TURNLEFT\n");
+                        d=0;
+                        p=1;
+                        kroki=1;
+                    }
+                }
+                k=k+1;
+                break;
+            case 'l':
+                if (l==1){
+                    kroki+=1;
+                } else{
+                    if (g==1){
+                        printf("FORWARD %d\n", kroki);
+                        printf("TURNLEFT\n");
+                        g=0;
+                        l=1;
+                        kroki=1;
+                    } else {
+                        printf("FORWARD %d\n", kroki);
+                        printf("TURNRIGHT\n");
+                        d=0;
+                        l=1;
+                        kroki=1;
+                    }
+                }
+                k=k-1;
+                break;
+            case 'g':
+                if (g==1){
+                    kroki+=1;
+                } else{
+                    if (p==1){
+                        printf("FORWARD %d\n", kroki);
+                        printf("TURNLEFT\n");
+                        p=0;
+                        g=1;
+                        kroki=1;
+                    } else {
+                        printf("FORWARD %d\n", kroki);
+                        printf("TURNRIGHT\n");
+                        l=0;
+                        g=1;
+                        kroki=1;
+                    }
+                }
+                w=w-1;
+                break;
+            case 'd':
+                if (d==1){
+                    kroki+=1;
+                } else{
+                    if (p==1){
+                        printf("FORWARD %d\n", kroki);
+                        printf("TURNRIGHT\n");
+                        p=0;
+                        d=1;
+                        kroki=1;
+                    } else {
+                        printf("FORWARD %d\n", kroki);
+                        printf("TURNLEFT\n");
+                        l=0;
+                        d=1;
+                        kroki=1;
+                    }
+                }
+                w=w+1;
+                break;
+        }
+    }
+    printf("FORWARD %d\n", kroki);
+}
+
+int main(int argc, char** argv[]) {
+    const char* filename = (argc >= 2) ? argv[1] : "maze.txt";
     FILE* file = fopen(filename, "r");
+    if (!file){
+        printf("Nie można odczytać pliku z labiryntem");
+        return 2;
+    }
     FILE *lab = fopen("lab.txt", "w+");
     if (!lab) {
         printf("Nie można utworzyć pliku\n");
@@ -105,15 +299,40 @@ int main() {
     }
 
     rozmiar(file, lab);
-    oznacz(lab, 1, 1); // Rozpoczęcie rekurencyjnej eksploracji labiryntu
     fclose(lab);
     lab = fopen("lab.txt", "r");
+    printf("Labirynt: \n");
+    czytaj(lab);
+    rewind(lab);
+    ZnajdzP(lab);
+    rewind(lab);
+    ZnajdzK(lab);
+    fclose(lab);
+    lab = fopen("lab.txt", "r+");
+    oznacz(lab, pw, pk+1);
+    fclose(lab);
+    /*lab = fopen("lab.txt", "r");
     if (!lab) {
         printf("Nie można otworzyć pliku do odczytu\n");
         return 4;
     }
-    printf("Labirynt: \n");
+    printf("Oznaczony labirynt: \n");
+    czytaj(lab);*/
+    lab = fopen("lab.txt", "r+");
+    PoprawneOznaczenie(lab,kw,kk);
+    fclose(lab);
+    lab = fopen("lab.txt", "r");
+    if (!lab) {
+        printf("Nie można otworzyć pliku do odczytu\n");
+        return 5;
+    }
+    printf("Oznaczony labirynt: \n");
     czytaj(lab);
+    fclose(lab);
+    lab = fopen("lab.txt", "r");
+    printf("START\n");
+    Instrukcja(lab, pw, pk+1);
+    printf("STOP\n");
     fclose(lab);
     fclose(file);
     return 0;
