@@ -5,10 +5,10 @@
 
 int n;   // Liczba wierszy
 int m;   // Liczba kolumn
-int pw;  // Numer wiersza P
-int pk;  // Numer kolumny P
-int kw;  // Numer wiersza K
-int kk;  // Numer kolumny K
+int pw=-1;  // Numer wiersza P
+int pk=-1;  // Numer kolumny P
+int kw=-1;  // Numer wiersza K
+int kk=-1;  // Numer kolumny K
 void rozmiar(FILE* filename, FILE *tym) {
     if (!filename) {
         printf("Nie mo¿na otworzyæ pliku.\n");
@@ -308,6 +308,10 @@ int main(int argc, char** argv[]) {
     rewind(lab);
     ZnajdzK(lab);
     fclose(lab);
+    if (pw==-1 || pk==-1 || kw==-1 || kk==-1){
+        printf("Brak P lub K\n");
+        return 4;
+    }
     lab = fopen("lab.txt", "r+");
     oznacz(lab, pw, pk+1);
     fclose(lab);
