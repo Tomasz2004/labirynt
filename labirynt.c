@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <stdbool.h>
 
 int n;   // Liczba wierszy
@@ -289,7 +288,7 @@ int main(int argc, char** argv[]) {
     const char* filename = (argc >= 2) ? argv[1] : "maze.txt";
     FILE* file = fopen(filename, "r");
     if (!file){
-        printf("Nie można odczytać pliku z labiryntem");
+        printf("Nie można odczytać pliku z labiryntem\n");
         return 2;
     }
     FILE *lab = fopen("lab.txt", "w+");
@@ -315,13 +314,6 @@ int main(int argc, char** argv[]) {
     lab = fopen("lab.txt", "r+");
     oznacz(lab, pw, pk+1);
     fclose(lab);
-    /*lab = fopen("lab.txt", "r");
-    if (!lab) {
-        printf("Nie można otworzyć pliku do odczytu\n");
-        return 4;
-    }
-    printf("Oznaczony labirynt: \n");
-    czytaj(lab);*/
     lab = fopen("lab.txt", "r+");
     PoprawneOznaczenie(lab,kw,kk);
     fclose(lab);
