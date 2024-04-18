@@ -50,7 +50,7 @@ int* ZnajdzP(FILE* file, int m) {
         }
         w++;
     }
-    return -1;
+    return NULL;
 }
 
 
@@ -69,6 +69,6 @@ int* ZnajdzK(FILE* file, int m) {
         }
         w++;
     }
-    return -1;
+    return NULL;
 }
 
