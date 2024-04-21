@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
 
     if (bflag==1){
         file = fopen(nazwa,"rb");
-        FILE *pom = fopen("pomocniczy.txt","w");
+        FILE *pom = fopen("pomocniczy.txt","w+");
 
         if (!file){
             fprintf(stderr,"Nie można odczytać pliku wejściowego z labiryntem\n");
@@ -118,20 +118,18 @@ int main(int argc, char* argv[]) {
         kw=b.exit_y-1;
         n=b.lines;
         m=b.columns;
-
         for (int i=0; i<=b.columns*b.lines;i+=count+1){
             fread(&separator,sizeof(uint8_t),1,file);
             fread(&value,sizeof(uint8_t),1,file);
             fread(&count,sizeof(uint8_t),1,file);
-
             if (value==b.path){
                 for (int j=0;j<=count;j++){
-                    fputc(' ', pom);
+                    fprintf(pom," ");
                 }
             }
             else if (value==b.wall){
                 for (int k=0;k<=count;k++){
-                    fputc('X',pom);
+                    fprintf(pom, "X");
                 }
             }
             else {
@@ -140,7 +138,6 @@ int main(int argc, char* argv[]) {
 
         }
 
-        fclose(file);
         fclose(pom);
         pom=fopen("pomocniczy.txt","r");
         if (!pom){
@@ -148,24 +145,23 @@ int main(int argc, char* argv[]) {
             exit(0);
         }
 
-
-        lab=fopen("lab.txt","w");
+        lab=fopen("lab.txt","w+");
         char c;
         int x,y;
         for (y=0; y<b.lines;y++){
             for (x=0; x<b.columns;x++){
                 c=getc(pom);
-                if (x==b.entry_x-1 && y==b.entry_y-1){
+                if (x==pk && y==pw){
                     fprintf(lab,"P");
                 }
-                else if (x==b.exit_x-1 && y==b.exit_y-1){
+                else if (x==kk && y==kw){
                     fprintf(lab,"K");
                 }
                 else {
                     fprintf(lab,"%c",c);
                 }
             }
-            fprintf(lab,"\n");
+            fprintf(lab,"\r\n");
         }
         fclose(pom);
         fclose(lab);
@@ -199,7 +195,6 @@ int main(int argc, char* argv[]) {
         free(pozycjaP);
         fclose(lab);
     }
-
     lab = fopen("lab.txt", "r");
     printf("Labirynt: \n");
     czytaj(lab);
