@@ -206,10 +206,11 @@ int main(int argc, char* argv[]) {
         return 4;
     }
     lab = fopen("lab.txt", "r+");
-    oznacz(lab, pw, pk + 1, n, m);
+    przekaz(n, m);
+    oznacz(lab, pw, pk + 1);
     fclose(lab);
     lab = fopen("lab.txt", "r+");
-    PoprawneOznaczenie(lab, kw, kk, m);
+    PoprawneOznaczenie(lab, kw, kk);
     fclose(lab);
     lab = fopen("lab.txt", "r");
     if (!lab) {
