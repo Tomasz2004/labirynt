@@ -26,7 +26,7 @@ void Instrukcja(FILE* file, int w, int k, int m) {
     int g = 0;
     int d = 0;
     while (c != 'K') {
-        fseek(file, w * (m + 2) + k, SEEK_SET);
+        fseek(file, w * (m + 1) + k, SEEK_SET);
         c = fgetc(file);
         switch (c) {
         case 'p':

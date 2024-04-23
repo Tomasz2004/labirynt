@@ -161,7 +161,8 @@ int main(int argc, char* argv[]) {
                     fprintf(lab,"%c",c);
                 }
             }
-            fprintf(lab,"\r\n");
+            //fprintf(lab,"\r\n");
+            fprintf(lab,"\n");
         }
         fclose(pom);
         fclose(lab);
@@ -177,7 +178,6 @@ int main(int argc, char* argv[]) {
             printf("Nie można utworzyć pliku\n");
             return 3;
         }
-
         int* wymiary = rozmiar(file, lab);
         n = wymiary[0];
         m = wymiary[1];

@@ -5,13 +5,11 @@
 
 
 
-
  int* rozmiar(FILE* filename, FILE* tym) {
     if (!filename) {
         printf("Nie mo¿na otworzyæ pliku.\n");
         exit(1);
     }
-
     int znak;
     char s[2048];
     int i = 0; // Licznik wierszy
