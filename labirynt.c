@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <sys/resource.h>
 
 #include "wyswietlacz.h"
 #include "dane_labiryntu.h"
@@ -35,6 +36,13 @@ struct LaBin {
 };
 
 int main(int argc, char* argv[]) {
+    struct rlimit stack_limit;
+    stack_limit.rlim_cur = RLIM_INFINITY;
+    stack_limit.rlim_max = RLIM_INFINITY;
+    if (setrlimit(RLIMIT_STACK, &stack_limit) != 0) {
+        perror("Błąd ustawiania limitu stosu");
+        exit(EXIT_FAILURE);
+    }
     FILE *file;
     FILE *lab;
     int bflag=0;
