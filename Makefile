@@ -4,7 +4,7 @@ objects = labirynt.o wyswietlacz.o oznaczenie.o dane_labiryntu.o
 
 program : $(objects)
 
-	cc -o program $(objects) -lm
+	ulimit -s unlimited && cc -o program $(objects) -lm
 
 labirynt.o : labirynt.c
 	cc -c labirynt.c

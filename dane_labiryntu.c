@@ -11,7 +11,7 @@
         exit(1);
     }
     int znak;
-    char s[2048];
+    char s[2051];
     int i = 0; // Licznik wierszy
     int j = 0; // Licznik kolumn
     int* rozmiar = malloc(2 * sizeof(int));
@@ -26,7 +26,6 @@
         i++; // Inkrementujemy licznik wierszy
     }
 
-    printf("Liczba kolumn %d i liczba wierszy %d\n", i, j);
     rozmiar[0] = i;
     rozmiar[1] = j;
     return rozmiar;
@@ -35,7 +34,7 @@
 
 int* ZnajdzP(FILE* file, int m) {
     int w = 0;
-    char s[2048];
+    char s[2051];
     int k;
     while (fgets(s, sizeof(s), file)) {
         for (k = 0; k < m; k++) {
@@ -54,7 +53,7 @@ int* ZnajdzP(FILE* file, int m) {
 
 int* ZnajdzK(FILE* file, int m) {
     int w = 0;
-    char s[2048];
+    char s[2051];
     int k;
     while (fgets(s, sizeof(s), file)) {
         for (k = 0; k < m; k++) {

@@ -161,7 +161,6 @@ int main(int argc, char* argv[]) {
                     fprintf(lab,"%c",c);
                 }
             }
-            //fprintf(lab,"\r\n");
             fprintf(lab,"\n");
         }
         fclose(pom);
@@ -195,12 +194,11 @@ int main(int argc, char* argv[]) {
         free(pozycjaP);
         fclose(lab);
     }
+    printf("Liczba kolumn %d i liczba wierszy %d\n", m, n);
     lab = fopen("lab.txt", "r");
     printf("Labirynt: \n");
     czytaj(lab);
-
     fclose(lab);
-
     if (pw == -1 || pk == -1 || kw == -1 || kk == -1) {
         printf("Brak P lub K\n");
         return 4;
