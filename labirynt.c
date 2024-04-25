@@ -19,22 +19,6 @@ int pk = -1;  // Numer kolumny P
 int kw = -1;  // Numer wiersza K
 int kk = -1;  // Numer kolumny K
 
-struct LaBin {
-    uint32_t fileId;
-    uint8_t escape;
-    uint16_t columns;
-    uint16_t lines;
-    uint16_t entry_x;
-    uint16_t entry_y;
-    uint16_t exit_x;
-    uint16_t exit_y;
-    uint16_t reserved[6];
-    uint32_t counter;
-    uint32_t solutionOffset;
-    uint8_t separator;
-    uint8_t wall;
-    uint8_t path;
-};
 
 int main(int argc, char* argv[]) {
     struct rlimit stack_limit;
