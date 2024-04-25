@@ -57,9 +57,9 @@ Wymiary przekonwertuj(FILE* in, FILE* out) {
     wymiary->m = b.columns;
 
     for (int i = 0; i <= b.columns * b.lines; i += count + 1) {
-        fread(&separator, sizeof(uint8_t), 1, file);
-        fread(&value, sizeof(uint8_t), 1, file);
-        fread(&count, sizeof(uint8_t), 1, file);
+        fread(&separator, sizeof(uint8_t), 1, in);
+        fread(&value, sizeof(uint8_t), 1, in);
+        fread(&count, sizeof(uint8_t), 1, in);
         if (value == b.path) {
             for (int j = 0; j <= count; j++) {
                 fprintf(pom, " ");
