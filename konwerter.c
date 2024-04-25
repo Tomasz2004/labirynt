@@ -80,7 +80,7 @@ Wymiary przekonwertuj(FILE* in, FILE* out) {
     pom = fopen("pomocniczy.txt", "r");
     if (!pom) {
         fprintf(stderr, "Nie udało się otworzyć pliku z zdekodowanym labiryntem\n");
-        exit(0);
+        exit(1);
     }
 
     char c;

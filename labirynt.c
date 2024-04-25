@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
         lab = fopen("lab.txt", "w+");
         if (!file) {
             fprintf(stderr, "Nie można odczytać pliku wejściowego z labiryntem\n");
-            exit(0);
+            exit(1);
         }
         Wymiary wymiary = przekonwertuj(file, lab);
         n = wymiary->n;
