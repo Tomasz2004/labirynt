@@ -18,7 +18,7 @@ void czytaj(FILE* file) {
 }
 
 
-void Instrukcja(FILE* file, int w, int k, int m) {
+void Instrukcja(FILE* file, int w, int k, int m, FILE* fileout) {
     char c = 0;
     int kroki = 1;
     int p = 1;
@@ -35,15 +35,15 @@ void Instrukcja(FILE* file, int w, int k, int m) {
             }
             else {
                 if (g == 1) {
-                    printf("FORWARD %d\n", kroki);
-                    printf("TURNRIGHT\n");
+                    fprintf(fileout,"FORWARD %d\n", kroki);
+                    fprintf(fileout,"TURNRIGHT\n");
                     g = 0;
                     p = 1;
                     kroki = 1;
                 }
                 else {
-                    printf("FORWARD %d\n", kroki);
-                    printf("TURNLEFT\n");
+                    fprintf(fileout, "FORWARD %d\n", kroki);
+                    fprintf(fileout,"TURNLEFT\n");
                     d = 0;
                     p = 1;
                     kroki = 1;
@@ -57,15 +57,15 @@ void Instrukcja(FILE* file, int w, int k, int m) {
             }
             else {
                 if (g == 1) {
-                    printf("FORWARD %d\n", kroki);
-                    printf("TURNLEFT\n");
+                    fprintf(fileout,"FORWARD %d\n", kroki);
+                    fprintf(fileout,"TURNLEFT\n");
                     g = 0;
                     l = 1;
                     kroki = 1;
                 }
                 else {
-                    printf("FORWARD %d\n", kroki);
-                    printf("TURNRIGHT\n");
+                    fprintf(fileout,"FORWARD %d\n", kroki);
+                    fprintf(fileout,"TURNRIGHT\n");
                     d = 0;
                     l = 1;
                     kroki = 1;
@@ -79,15 +79,15 @@ void Instrukcja(FILE* file, int w, int k, int m) {
             }
             else {
                 if (p == 1) {
-                    printf("FORWARD %d\n", kroki);
-                    printf("TURNLEFT\n");
+                    fprintf(fileout,"FORWARD %d\n", kroki);
+                    fprintf(fileout,"TURNLEFT\n");
                     p = 0;
                     g = 1;
                     kroki = 1;
                 }
                 else {
-                    printf("FORWARD %d\n", kroki);
-                    printf("TURNRIGHT\n");
+                    fprintf(fileout,"FORWARD %d\n", kroki);
+                    fprintf(fileout,"TURNRIGHT\n");
                     l = 0;
                     g = 1;
                     kroki = 1;
@@ -101,15 +101,15 @@ void Instrukcja(FILE* file, int w, int k, int m) {
             }
             else {
                 if (p == 1) {
-                    printf("FORWARD %d\n", kroki);
-                    printf("TURNRIGHT\n");
+                    fprintf(fileout,"FORWARD %d\n", kroki);
+                    fprintf(fileout,"TURNRIGHT\n");
                     p = 0;
                     d = 1;
                     kroki = 1;
                 }
                 else {
-                    printf("FORWARD %d\n", kroki);
-                    printf("TURNLEFT\n");
+                    fprintf(fileout,"FORWARD %d\n", kroki);
+                    fprintf(fileout,"TURNLEFT\n");
                     l = 0;
                     d = 1;
                     kroki = 1;
@@ -119,5 +119,5 @@ void Instrukcja(FILE* file, int w, int k, int m) {
             break;
         }
     }
-    printf("FORWARD %d\n", kroki);
+    fprintf(fileout,"FORWARD %d\n", kroki);
 }

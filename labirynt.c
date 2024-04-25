@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
     }
     FILE *file;
     FILE *lab;
+    FILE *kroki = fopen("kroki.txt", "w+");
     int bflag=0;
     int tflag=0;
     int pflag=0;
@@ -149,11 +150,12 @@ int main(int argc, char* argv[]) {
     czytaj(lab);
     fclose(lab);
     lab = fopen("lab.txt", "r");
-    printf("START\n");
-    Instrukcja(lab, pw, pk + 1, m);
-    printf("STOP\n");
+    fprintf(kroki, "START\n");
+    Instrukcja(lab, pw, pk + 1, m, kroki);
+    fprintf(kroki,"STOP\n");
     fclose(lab);
     fclose(file);
+    fclose(kroki);
     return 0;
 }
 
