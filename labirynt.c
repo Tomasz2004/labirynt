@@ -101,7 +101,15 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "Nie można odczytać pliku wejściowego z labiryntem\n");
             exit(0);
         }
-        przekonwertuj(file, lab);
+        Wymiary wymiary = przekonwertuj(file, lab);
+        n = wymiary->n;
+        m = wymiary->m;
+        pw = wymiary->pw;
+        pk = wymiary->pk;
+        kw = wymiary->kw;
+        kk = wymiary->kk;
+
+        free(wymiary);
         fclose(lab);
     }
     if (tflag==1){

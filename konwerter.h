@@ -6,4 +6,13 @@
 #include <sys/resource.h>
 
 
-void przekonwertuj(FILE* in, FILE* out);
+typedef struct Wym {
+    int pk;
+    int pw;
+    int kk;
+    int kw;
+    int n;
+    int m;
+} *Wymiary ;
+
+Wymiary przekonwertuj(FILE* in, FILE* out);

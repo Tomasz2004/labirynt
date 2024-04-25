@@ -26,10 +26,9 @@ struct LaBin {
 };
 
 
-void przekonwertuj(FILE* in, FILE* out) {
+Wymiary przekonwertuj(FILE* in, FILE* out) {
     FILE* pom = fopen("pomocniczy.txt", "w+");
-
-
+    
     uint8_t separator;
     uint8_t value;
     uint8_t count;
@@ -49,12 +48,14 @@ void przekonwertuj(FILE* in, FILE* out) {
     fread(&b.wall, sizeof(b.wall), 1, file);
     fread(&b.path, sizeof(b.path), 1, file);
 
-    pk = b.entry_x - 1;
-    pw = b.entry_y - 1;
-    kk = b.exit_x - 1;
-    kw = b.exit_y - 1;
-    n = b.lines;
-    m = b.columns;
+    Wymiary wymiary = malloc(sizeof(struct Wym));
+    wym->pk = b.entry_x - 1;
+    wym->pw = b.entry_y - 1;
+    wym->kk = b.exit_x - 1;
+    wym->kw = b.exit_y - 1;
+    wym->n = b.lines;
+    wym->m = b.columns;
+
     for (int i = 0; i <= b.columns * b.lines; i += count + 1) {
         fread(&separator, sizeof(uint8_t), 1, file);
         fread(&value, sizeof(uint8_t), 1, file);
@@ -87,14 +88,14 @@ void przekonwertuj(FILE* in, FILE* out) {
     for (y = 0; y < b.lines; y++) {
         for (x = 0; x < b.columns; x++) {
             c = getc(pom);
-            if (x == pk && y == pw) {
-                fprintf(lab, "P");
+            if (x == wymiary->pk && y == wymiary->pw) {
+                fprintf(out, "P");
             }
-            else if (x == kk && y == kw) {
-                fprintf(lab, "K");
+            else if (x == wymiary->kk && y == wymiary->kw) {
+                fprintf(out, "K");
             }
             else {
-                fprintf(lab, "%c", c);
+                fprintf(out, "%c", c);
             }
         }
         fprintf(lab, "\n");
