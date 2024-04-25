@@ -33,28 +33,28 @@ Wymiary przekonwertuj(FILE* in, FILE* out) {
     uint8_t value;
     uint8_t count;
     struct LaBin b;
-    fread(&b.fileId, sizeof(b.fileId), 1, file);
-    fread(&b.escape, sizeof(b.escape), 1, file);
-    fread(&b.columns, sizeof(b.columns), 1, file);
-    fread(&b.lines, sizeof(b.lines), 1, file);
-    fread(&b.entry_x, sizeof(b.entry_x), 1, file);
-    fread(&b.entry_y, sizeof(b.entry_y), 1, file);
-    fread(&b.exit_x, sizeof(b.exit_x), 1, file);
-    fread(&b.exit_y, sizeof(b.exit_y), 1, file);
-    fread(&b.reserved, sizeof(b.reserved), 1, file);
-    fread(&b.counter, sizeof(b.counter), 1, file);
-    fread(&b.solutionOffset, sizeof(b.solutionOffset), 1, file);
-    fread(&b.separator, sizeof(b.separator), 1, file);
-    fread(&b.wall, sizeof(b.wall), 1, file);
-    fread(&b.path, sizeof(b.path), 1, file);
+    fread(&b.fileId, sizeof(b.fileId), 1, in);
+    fread(&b.escape, sizeof(b.escape), 1, in);
+    fread(&b.columns, sizeof(b.columns), 1, in);
+    fread(&b.lines, sizeof(b.lines), 1, in);
+    fread(&b.entry_x, sizeof(b.entry_x), 1, in);
+    fread(&b.entry_y, sizeof(b.entry_y), 1, in);
+    fread(&b.exit_x, sizeof(b.exit_x), 1, in);
+    fread(&b.exit_y, sizeof(b.exit_y), 1, in);
+    fread(&b.reserved, sizeof(b.reserved), 1, in);
+    fread(&b.counter, sizeof(b.counter), 1, in);
+    fread(&b.solutionOffset, sizeof(b.solutionOffset), 1, in);
+    fread(&b.separator, sizeof(b.separator), 1, in);
+    fread(&b.wall, sizeof(b.wall), 1, in);
+    fread(&b.path, sizeof(b.path), 1, in);
 
     Wymiary wymiary = malloc(sizeof(struct Wym));
-    wym->pk = b.entry_x - 1;
-    wym->pw = b.entry_y - 1;
-    wym->kk = b.exit_x - 1;
-    wym->kw = b.exit_y - 1;
-    wym->n = b.lines;
-    wym->m = b.columns;
+    wymiary->pk = b.entry_x - 1;
+    wymiary->pw = b.entry_y - 1;
+    wymiary->kk = b.exit_x - 1;
+    wymiary->kw = b.exit_y - 1;
+    wymiary->n = b.lines;
+    wymiary->m = b.columns;
 
     for (int i = 0; i <= b.columns * b.lines; i += count + 1) {
         fread(&separator, sizeof(uint8_t), 1, file);
@@ -98,7 +98,7 @@ Wymiary przekonwertuj(FILE* in, FILE* out) {
                 fprintf(out, "%c", c);
             }
         }
-        fprintf(lab, "\n");
+        fprintf(out, "\n");
     }
     fclose(pom);
 }
