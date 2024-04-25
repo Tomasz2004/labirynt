@@ -101,4 +101,6 @@ Wymiary przekonwertuj(FILE* in, FILE* out) {
         fprintf(out, "\n");
     }
     fclose(pom);
+    
+    return wymiary;
 }
