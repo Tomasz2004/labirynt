@@ -4,6 +4,8 @@
 
 #include "oznaczenie.h"
 
+#define SCIANA 'X'
+
 
 int x = 0;
 int y = 0;
@@ -18,7 +20,7 @@ void przekaz(int a, int b) {
 bool oznacz(FILE* file, int w, int k) {
     fseek(file, w * (y + 1) + k, SEEK_SET); // Przesuni?cie kursora na odpowiedni? pozycj? w pliku
     char c = fgetc(file); // Odczyt znaku z pozycji (w, k)
-    if (c == 'X') {
+    if (c == SCIANA) {
         return false;
     }
     if (c == 'P') {
